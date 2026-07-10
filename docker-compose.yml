@@ -1,0 +1,27 @@
+# ─────────────────────────────────────────────
+# 🐳 docker-compose.yml لـ Hermes Agent على Coolify
+# ─────────────────────────────────────────────
+# في Coolify: أضف "Docker Compose" service وارفع هذا الملف.
+# Coolify سيتولّى بناء الصورة من Dockerfile في نفس المجلد.
+
+services:
+  hermes:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hermes-agent
+    restart: unless-stopped
+    # متغيرات بيئة اختيارية (يمكن ضبطها من لوحة Coolify)
+    environment:
+      - HERMES_HOME=/root/.hermes
+      - TZ=UTC
+      # - BACKUP_FILE=/app/backup/hermes-backup-20260710.tar.gz
+    ports:
+      - "9119:9119"
+    volumes:
+      # مجلد دائم يحفظ إعدادات ومهارات وجلسات Hermes حتى بعد إعادة البناء
+      - hermes_data:/root/.hermes
+    # Coolify سيدير healthcheck/network تلقائياً
+
+volumes:
+  hermes_data:
